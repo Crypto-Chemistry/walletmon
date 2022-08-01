@@ -6,6 +6,7 @@ import json
 import ast
 from discord_webhook import DiscordWebhook
 import re
+import requests
 
 def main():
     parser = argparse.ArgumentParser()
@@ -43,8 +44,7 @@ def main():
     print(wallets)
     for wallet in wallets:
         wallet['balance']=check_balance(wallet)
-        print(wallet)
-        check_threshold(wallet)
+        #check_threshold(wallet)
 
 def map_address_to_chain(address):
     pattern = re.compile(r"""(?x)
@@ -70,11 +70,12 @@ def map_address_to_chain(address):
             raise ValueError(f'Unknown pattern for {s!r}')
 
 def check_balance(wallet=dict):
-    query=subprocess.run([wallet['daemon'], "query", "bank", "balances", wallet['address'], "--node", f"https://rpc.cosmos.directory:443/{wallet['chain']}", "--denom", wallet['denom'], "--output", "json"], universal_newlines=True, capture_output=True)
-    results=json.loads(query.stdout)
-    balance = (results['amount'])
-    print(f"Wallet Balance for {wallet['chain']}: {balance}{wallet['denom']}")
-    return balance
+    url=f"https://rest.cosmos.directory/{wallet['chain']}/cosmos/bank/v1beta1/balances/{wallet['address']}/by_denom?denom={wallet['denom']}"
+    query = requests.get(url)
+    results=json.loads(query.text)
+    balance = (results['balance']['amount'])
+    print(f"Wallet Balance for {wallet['address']}: {balance}{wallet['denom']}")
+    # return balance
 
 def send_discord_message(content=str,discord_webhook_url=str):
     webhook = DiscordWebhook(url=discord_webhook_url, content=content)

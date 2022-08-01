@@ -1,0 +1,14 @@
+version: '3.2'
+services:
+
+  walletmon:
+    build: .
+    command: "walletmon.py \
+              -a address1 address2 etc \ 
+              -d DISCORD_WEBHOOK_URL"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "10"
+    restart: unless-stopped
