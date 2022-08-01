@@ -40,11 +40,10 @@ def main():
     if args.addresses:
         for address in args.addresses:
             wallets.append(map_address_to_chain(address))
-    #wallets.append(map_address_to_chain('kujira1eywufmvkl4805stahfkdt0qetc3r0zvh98qzpz'))
     print(wallets)
     for wallet in wallets:
         wallet['balance']=check_balance(wallet)
-        #check_threshold(wallet)
+        check_threshold(wallet)
 
 def map_address_to_chain(address):
     pattern = re.compile(r"""(?x)
