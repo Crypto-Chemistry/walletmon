@@ -74,7 +74,7 @@ def check_balance(wallet=dict):
     results=json.loads(query.text)
     balance = (results['balance']['amount'])
     print(f"Wallet Balance for {wallet['address']}: {balance}{wallet['denom']}")
-    # return balance
+    return balance
 
 def send_discord_message(content=str,discord_webhook_url=str):
     webhook = DiscordWebhook(url=discord_webhook_url, content=content)
