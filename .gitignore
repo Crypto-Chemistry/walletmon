@@ -1,4 +1,5 @@
 venv/
 Dockerfile
 walletmon
+docker-compose.yml
 chain-registry
