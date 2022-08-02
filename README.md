@@ -30,7 +30,7 @@ Build the image
 
 `docker-compose build --no-cache`
 
-Run the application (It acts as a one-shot similar to Restake. To configure it as a repeated service, see the section on Configuring a WalletMon Service)
+Run the application (It acts as a one-shot similar to Restake. To configure it as a repeated service, see [Configuring a WalletMon Service](#configuring-a-walletmon-service))
 
 `docker-compose run --rm walletmon`
 
@@ -78,7 +78,11 @@ If running from source, make sure to reinstall the requirements.txt file in case
 
 # Configuring a WalletMon Service
 
+To configure WalletMon as a service, first create a service file.
+
 `sudo nano /etc/systemd/system/walletmon.service`
+
+Copy the following contents into the `walletmon.service` file, replacing the WorkingDirectory variable with the path to where the repo is cloned.
 
 ```
 [Unit]
@@ -96,7 +100,11 @@ ExecStart=/usr/bin/docker-compose run --rm walletmon
 WantedBy=multi-user.target
 ```
 
+Next, create the timer that dictates how often the service is called.
+
 `sudo nano /etc/systemd/system/walletmon.timer`
+
+Copy the following contents into the `walletmon.timer` file. Adjust the OnCalendar variable to change how frequently the application runs. It's configured to run every hour by default.
 
 ```
 [Unit]
