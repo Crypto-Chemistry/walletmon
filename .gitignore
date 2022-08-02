@@ -3,3 +3,4 @@ Dockerfile
 walletmon
 docker-compose.yml
 docker-compose.yml
+chain-registry
