@@ -6,7 +6,7 @@ Cosmos WalletMon is a simple script that helps send notifications whenever a wal
 
 Chain data is obtained from the [Chain Registry](https://github.com/cosmos/chain-registry).
 
-Any chain that has a chain_name set in the chain's `chain.json` and asset base in the `assetlist.json` files are supported.
+Any chain that has a chain_name set in the chain's `chain.json` and asset base in the `assetlist.json` files is supported.
 
 # Usage
 
