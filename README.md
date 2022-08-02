@@ -2,6 +2,12 @@
 
 Cosmos WalletMon is a simple script that helps send notifications whenever a wallet drops below a specified threshold balance. This was inspired by me always forgetting to check whether my Restake hot wallet had funds to keep auto-compounding delegate's balance.
 
+# Support Chains
+
+Chain data is obtained from the [Chain Registry](https://github.com/cosmos/chain-registry).
+
+Any chain that has a chain_name set in the chain's `chain.json` and asset base in the `assetlist.json` files are supported.
+
 # Usage
 
 The easiest way to run this is using docker-compose.
