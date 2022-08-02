@@ -88,8 +88,7 @@ def check_threshold(wallet=dict):
         case 'uscrt':
             threshold=10000000
     if int(wallet['balance']) < threshold:
-        content=""
-        content+=f"{wallet['address']}: {wallet['balance']}{wallet['denom']}"
+        content=f"{wallet['address']}: {wallet['balance']}{wallet['denom']}"
         print(content)
         print("Calling send_discord_message")
         send_discord_message(content,discord_webhook_url)
