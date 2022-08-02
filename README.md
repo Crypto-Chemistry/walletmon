@@ -64,13 +64,19 @@ Run the walletmon.py script with the required arguments
 
 Example command:
 
-`python3 walletmon.py -a kujira1tfknxt857r4lm8eh2py5n3yq00t3mq5eerh6qs clan1wg7nrqc29veuzw9p6ujhad697a3tpzl3zrfplr -d https://discord.com/api/webhooks/1234567890123456789/abcdefghijklmnop-1A-2B3CD4-e5f6g7h8i9j10`
+```
+python3 walletmon.py -a kujira1tfknxt857r4lm8eh2py5n3yq00t3mq5eerh6qs clan1wg7nrqc29veuzw9p6ujhad697a3tpzl3zrfplr \
+                     -d https://discord.com/api/webhooks/1234567890123456789/abcdefghijklmnop-1A-2B3CD4-e5f6g7h8i9j10
+```
 
 ## Update Instructions
 
-To update to a newer version navigate to where the repo is cloned and run the following command
+To update to a newer version navigate to where the repo is cloned and run the following commands
 
-`git fetch --all && git pull`
+```
+git fetch --all
+git pull
+```
 
 If using the Docker Compose method to run the application, make sure to force rebuild the image:
 
