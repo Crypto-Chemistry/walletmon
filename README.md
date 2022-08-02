@@ -18,7 +18,7 @@ Move example.docker-compose.yml to docker-compose.yml
 
 Edit docker-compose.yml and modify the variables. After the `-a` flag, a list of space-separated addresses to monitor should be provided. These do not need to belong to the same chain. After the `-d` flag, add the Discord webhook for the channel that you want to receive low balance notifications on.
 
-Example docker-compose.yml:
+Example docker-compose.yml command segement:
 
 ```
 command: "walletmon.py \
