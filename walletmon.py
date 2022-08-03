@@ -31,12 +31,25 @@ def main():
         required=True,
         help="Discord webhook url to send notifications to"
     )
+    parser.add_argument(
+        "-t",
+        "--threshold",
+        dest="threshold",
+        type=int,
+        required=False,
+        help="Global threshold for wallet balances before sending notifications"
+    )
 
     args = parser.parse_args()
 
     if args.discord_webhook_url:
         global discord_webhook_url
         discord_webhook_url=args.discord_webhook_url
+
+    if args.threshold:
+        threshold=args.threshold
+    else:
+        threshold=1000000
 
     update_chain_registry()
 
@@ -50,7 +63,7 @@ def main():
 
     for wallet in wallets:
         wallet['balance']=check_balance(wallet)
-        check_threshold(wallet)
+        check_threshold(wallet,threshold)
 
 def update_chain_registry():
     git_url="https://github.com/Crypto-Chemistry/tenderduty_config_updater.git"
@@ -132,15 +145,8 @@ def send_discord_message(content=str,discord_webhook_url=str):
     webhook = DiscordWebhook(url=discord_webhook_url, content=content)
     response = webhook.execute()
 
-def check_threshold(wallet=dict):
+def check_threshold(wallet=dict,threshold=int):
     #TODO: Add thresholds that are customizable (dynamic?) and set sane defaults
-    match wallet['denom']:
-        case 'ukuji':
-            threshold=1000000
-        case 'uscrt':
-            threshold=10000000
-        case _:
-            threshold=10000000
     if int(wallet['balance']) < threshold:
         content=f"{wallet['address']}: {wallet['balance']}{wallet['denom']}"
         send_discord_message(content,discord_webhook_url)
