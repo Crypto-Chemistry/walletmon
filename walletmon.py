@@ -51,6 +51,9 @@ def main():
     if args.discord_webhook_url:
         global discord_webhook_url
         discord_webhook_url=args.discord_webhook_url
+    else:
+        print("Error - Please supply a Discord webhook URL with the '-d' flag")
+        quit()
 
     if args.threshold:
         thresholds=parse_chain_thresholds(args.threshold)
