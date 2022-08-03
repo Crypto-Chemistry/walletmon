@@ -158,7 +158,6 @@ def send_discord_message(content=str,discord_webhook_url=str):
     response = webhook.execute()
 
 def check_threshold(wallet=dict,threshold=int):
-    #TODO: Add thresholds that are customizable (dynamic?) and set sane defaults
     if int(wallet['balance']) < threshold:
         content=f"{wallet['address']}: {wallet['balance']}{wallet['denom']}"
         send_discord_message(content,discord_webhook_url)
