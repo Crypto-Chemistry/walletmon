@@ -133,6 +133,7 @@ def find_chain_json(address=str):
     testnet_folder="testnets"
     for root, dirs, files in os.walk(repo_path):
         for file in files:
+            print(os.path.join(root, file))
             if file.endswith(".json") and testnet_folder not in root:
                 filenames.append(os.path.join(root, file))
 
