@@ -130,6 +130,14 @@ OnCalendar=*-*-* *:00:00
 WantedBy=timers.target
 ```
 
+Run the following commands to start and enable the service/timer:
+
+```
+sudo systemctl enable /etc/systemd/system/walletmon.service
+sudo systemctl enable /etc/systemd/system/walletmon.timer
+sudo systemctl start /etc/systemd/system/walletmon.timer
+```
+
 # Available Parameters
 
 | Parameter            | Type                       | Required | Description                                                                |
