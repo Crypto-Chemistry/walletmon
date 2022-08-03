@@ -93,7 +93,10 @@ def map_address_to_chain(address=str):
     repo_dir="chain-registry"
     script_dir=pathlib.Path( __file__ ).parent.absolute()
     repo_path=os.path.join(script_dir,repo_dir)
-    
+    print(script_dir)
+    print(repo_path)
+    print(chain_json)
+    print(address)
     chain_json=find_chain_json(address)
     f = open(chain_json)
     chain_data=json.load(f)
