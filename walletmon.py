@@ -93,11 +93,7 @@ def map_address_to_chain(address=str):
     repo_dir="chain-registry"
     script_dir=pathlib.Path( __file__ ).parent.absolute()
     repo_path=os.path.join(script_dir,repo_dir)
-    print(script_dir)
-    print(repo_path)
-    print(address)
     chain_json=find_chain_json(address)
-    print(chain_json)
     f = open(chain_json)
     chain_data=json.load(f)
 
@@ -133,7 +129,6 @@ def find_chain_json(address=str):
     testnet_folder="testnets"
     for root, dirs, files in os.walk(repo_path):
         for file in files:
-            print(os.path.join(root, file))
             if file.endswith(".json") and testnet_folder not in root:
                 filenames.append(os.path.join(root, file))
 
