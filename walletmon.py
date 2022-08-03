@@ -79,7 +79,7 @@ def main():
             check_threshold(wallet,threshold)
 
 def update_chain_registry():
-    git_url="https://github.com/Crypto-Chemistry/tenderduty_config_updater.git"
+    git_url="https://github.com/cosmos/chain-registry.git"
     repo_dir="chain-registry"
     script_dir=pathlib.Path( __file__ ).parent.absolute()
     repo_path=os.path.join(script_dir,repo_dir)
