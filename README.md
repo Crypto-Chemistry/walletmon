@@ -129,3 +129,12 @@ OnCalendar=*-*-* *:00:00
 [Install]
 WantedBy=timers.target
 ```
+
+# Available Parameters
+
+| Parameter            | Type                       | Required | Description                                                                |
+|----------------------|----------------------------|----------|----------------------------------------------------------------------------|
+| -a,--addresses       | String or multiple strings | Yes      | Addresses to check balances                                                |
+| -d,--discord         | String                     | Yes      | Discord webhook url to send notifications to                               |
+| -t,--threshold       | String or multiple strings | No       | Chain specific thresholds for wallet balances before sending notifications |
+| -g,--globalthreshold | Int                        | No       | Global threshold for wallet balances before sending notifications          |

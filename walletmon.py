@@ -1,9 +1,7 @@
 #! /usr/bin/python3
 
 import argparse
-import subprocess
 import json
-import ast
 from discord_webhook import DiscordWebhook
 import re
 import requests
@@ -31,12 +29,36 @@ def main():
         required=True,
         help="Discord webhook url to send notifications to"
     )
+    parser.add_argument(
+        "-t",
+        "--threshold",
+        nargs='+',
+        dest="threshold",
+        required=False,
+        help="Chain specific thresholds for wallet balances before sending notifications"
+    )
+    parser.add_argument(
+        "-g",
+        "--globalthreshold",
+        dest="global_threshold",
+        type=int,
+        required=False,
+        help="Global threshold for wallet balances before sending notifications"
+    )
 
     args = parser.parse_args()
 
     if args.discord_webhook_url:
         global discord_webhook_url
         discord_webhook_url=args.discord_webhook_url
+
+    if args.threshold:
+        thresholds=parse_chain_thresholds(args.threshold)
+
+    if args.global_threshold:
+        threshold=args.global_threshold
+    else:
+        threshold=1000000
 
     update_chain_registry()
 
@@ -49,8 +71,12 @@ def main():
         quit()
 
     for wallet in wallets:
-        wallet['balance']=check_balance(wallet)
-        check_threshold(wallet)
+        if wallet['denom'] in thresholds.keys():
+            wallet['balance']=check_balance(wallet)
+            check_threshold(wallet,int(thresholds[wallet['denom']]))
+        else:
+            wallet['balance']=check_balance(wallet)
+            check_threshold(wallet,threshold)
 
 def update_chain_registry():
     git_url="https://github.com/Crypto-Chemistry/tenderduty_config_updater.git"
@@ -63,7 +89,7 @@ def update_chain_registry():
     origin = repo.remotes.origin
     origin.pull()
 
-def map_address_to_chain(address):
+def map_address_to_chain(address=str):
     repo_dir="chain-registry"
     script_dir=pathlib.Path( __file__ ).parent.absolute()
     repo_path=os.path.join(script_dir,repo_dir)
@@ -94,7 +120,7 @@ def map_address_to_chain(address):
             'chain': chain_name,
             'denom': chain_base_denom}
 
-def find_chain_json(address):
+def find_chain_json(address=str):
     repo_dir="chain-registry"
     script_dir=pathlib.Path( __file__ ).parent.absolute()
     repo_path=os.path.join(script_dir,repo_dir)
@@ -132,18 +158,19 @@ def send_discord_message(content=str,discord_webhook_url=str):
     webhook = DiscordWebhook(url=discord_webhook_url, content=content)
     response = webhook.execute()
 
-def check_threshold(wallet=dict):
+def check_threshold(wallet=dict,threshold=int):
     #TODO: Add thresholds that are customizable (dynamic?) and set sane defaults
-    match wallet['denom']:
-        case 'ukuji':
-            threshold=1000000
-        case 'uscrt':
-            threshold=10000000
-        case _:
-            threshold=10000000
     if int(wallet['balance']) < threshold:
         content=f"{wallet['address']}: {wallet['balance']}{wallet['denom']}"
         send_discord_message(content,discord_webhook_url)
+
+def parse_chain_thresholds(thresholds=str):
+    threshold_mapping={}
+    for threshold in thresholds:
+        chain=re.sub(r'[^a-zA-Z]', "", threshold)
+        amount=re.sub("\D", "", threshold)
+        threshold_mapping[chain]=amount
+    return threshold_mapping
 
 if __name__ == "__main__":
     main()
