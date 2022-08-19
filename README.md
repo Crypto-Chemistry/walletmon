@@ -29,7 +29,8 @@ Example docker-compose.yml command segement:
 ```
 command: "walletmon.py \
               -a kujira1tfknxt857r4lm8eh2py5n3yq00t3mq5eerh6qs clan1wg7nrqc29veuzw9p6ujhad697a3tpzl3zrfplr \ 
-              -d https://discord.com/api/webhooks/1234567890123456789/abcdefghijklmnop-1A-2B3CD4-e5f6g7h8i9j10"
+              -d https://discord.com/api/webhooks/1234567890123456789/abcdefghijklmnop-1A-2B3CD4-e5f6g7h8i9j10 \
+              -g 100000"
 ```
 
 Build the image
@@ -66,7 +67,8 @@ Example command:
 
 ```
 python3 walletmon.py -a kujira1tfknxt857r4lm8eh2py5n3yq00t3mq5eerh6qs clan1wg7nrqc29veuzw9p6ujhad697a3tpzl3zrfplr \
-                     -d https://discord.com/api/webhooks/1234567890123456789/abcdefghijklmnop-1A-2B3CD4-e5f6g7h8i9j10
+                     -d https://discord.com/api/webhooks/1234567890123456789/abcdefghijklmnop-1A-2B3CD4-e5f6g7h8i9j10 \
+                     -g 100000
 ```
 
 ## Update Instructions
@@ -146,3 +148,12 @@ sudo systemctl start /etc/systemd/system/walletmon.timer
 | -d,--discord         | String                     | Yes      | Discord webhook url to send notifications to                               |
 | -t,--threshold       | String or multiple strings | No       | Chain specific thresholds for wallet balances before sending notifications |
 | -g,--globalthreshold | Int                        | No       | Global threshold for wallet balances before sending notifications          |
+
+## Chain Specific Threshold Example
+
+
+```
+python3 walletmon.py -a kujira1tfknxt857r4lm8eh2py5n3yq00t3mq5eerh6qs clan1wg7nrqc29veuzw9p6ujhad697a3tpzl3zrfplr \
+                     -d https://discord.com/api/webhooks/1234567890123456789/abcdefghijklmnop-1A-2B3CD4-e5f6g7h8i9j10 \
+                     -t '50000ukuji' '900uclan'
+```
