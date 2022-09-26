@@ -2,7 +2,7 @@
 
 import argparse
 import json
-from discord_webhook import DiscordWebhook
+from discord_webhook import DiscordWebhook,DiscordEmbed
 import re
 import requests
 import git
@@ -30,6 +30,14 @@ def main():
         help="Discord webhook url to send notifications to"
     )
     parser.add_argument(
+        "-l",
+        "--label",
+        dest="label",
+        type=str,
+        required=False,
+        help="Wallet Label"
+    )
+    parser.add_argument(
         "-t",
         "--threshold",
         nargs='+',
@@ -44,6 +52,14 @@ def main():
         type=int,
         required=False,
         help="Global threshold for wallet balances before sending notifications"
+    )
+    parser.add_argument(
+        "-u",
+        "--userid",
+        dest="discord_uuid",
+        type=str,
+        required=False,
+        help="Discord User by UUID to tag in alerts"
     )
 
     args = parser.parse_args()
@@ -74,12 +90,16 @@ def main():
         quit()
 
     for wallet in wallets:
+        if args.label:
+            wallet['label'] = args.label
+        else:
+            wallet['label'] = None
         if wallet['denom'] in thresholds.keys():
             wallet['balance']=check_balance(wallet)
-            check_threshold(wallet,int(thresholds[wallet['denom']]))
+            check_threshold(wallet,int(thresholds[wallet['denom']]),args.discord_uuid)
         else:
             wallet['balance']=check_balance(wallet)
-            check_threshold(wallet,threshold)
+            check_threshold(wallet,threshold,args.discord_uuid)
 
 def update_chain_registry():
     git_url="https://github.com/cosmos/chain-registry.git"
@@ -135,7 +155,7 @@ def find_chain_json(address=str):
             if file.endswith(".json") and testnet_folder not in root:
                 filenames.append(os.path.join(root, file))
 
-    #Get HRP of address
+    #Get Human Readable Portion of address
     hrp=re.split('1',address)[0]
 
     #Match the prefix and return the file name
@@ -156,14 +176,26 @@ def check_balance(wallet=dict):
     print(f"Wallet Balance for {wallet['address']}: {balance}{wallet['denom']}")
     return balance
 
-def send_discord_message(content=str,discord_webhook_url=str):
-    webhook = DiscordWebhook(url=discord_webhook_url, content=content)
+def send_discord_message(discord_webhook_url, address, label, balance,**kwargs):
+    embed = DiscordEmbed(title="Low Balance Alert", description="", color='e53935')
+    embed.add_embed_field(name='Address', value=address, inline=False)
+    if label:
+        embed.add_embed_field(name='Label', value=label, inline=False)
+    embed.add_embed_field(name='Balance', value=balance, inline=False)
+
+    if 'uuid' in kwargs:
+        webhook = DiscordWebhook(url=discord_webhook_url,content=f"<@{kwargs['uuid']}>")
+    else:
+        webhook = DiscordWebhook(url=discord_webhook_url)
+    webhook.add_embed(embed)
     response = webhook.execute()
 
-def check_threshold(wallet=dict,threshold=int):
+def check_threshold(wallet=dict,threshold=int,discord_uuid=str):
     if int(wallet['balance']) < threshold:
-        content=f"{wallet['address']}: {wallet['balance']}{wallet['denom']}"
-        send_discord_message(content,discord_webhook_url)
+        if discord_uuid:
+            send_discord_message(discord_webhook_url,wallet['address'], wallet['label'], f"{wallet['balance']}{wallet['denom']}", uuid=discord_uuid)
+        else:
+            send_discord_message(discord_webhook_url, wallet['address'], wallet['label'], f"{wallet['balance']}{wallet['denom']}")
 
 def parse_chain_thresholds(thresholds=str):
     threshold_mapping={}

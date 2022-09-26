@@ -24,7 +24,7 @@ Move example.docker-compose.yml to docker-compose.yml
 
 Edit docker-compose.yml and modify the variables. After the `-a` flag, a list of space-separated addresses to monitor should be provided. These do not need to belong to the same chain. After the `-d` flag, add the Discord webhook for the channel that you want to receive low balance notifications on.
 
-Example docker-compose.yml command segement:
+Example docker-compose.yml command segment:
 
 ```
 command: "walletmon.py \
@@ -146,14 +146,25 @@ sudo systemctl start /etc/systemd/system/walletmon.timer
 |----------------------|----------------------------|----------|----------------------------------------------------------------------------|
 | -a,--addresses       | String or multiple strings | Yes      | Addresses to check balances                                                |
 | -d,--discord         | String                     | Yes      | Discord webhook url to send notifications to                               |
+| -l,--label           | String                     | No       | Wallet Label Identifier for alert clarity                                  |
+| -u,--userid          | String                     | No       | Discord User by UUID to tag in alerts                                      |
 | -t,--threshold       | String or multiple strings | No       | Chain specific thresholds for wallet balances before sending notifications |
 | -g,--globalthreshold | Int                        | No       | Global threshold for wallet balances before sending notifications          |
 
 ## Chain Specific Threshold Example
 
-
 ```
 python3 walletmon.py -a kujira1tfknxt857r4lm8eh2py5n3yq00t3mq5eerh6qs clan1wg7nrqc29veuzw9p6ujhad697a3tpzl3zrfplr \
                      -d https://discord.com/api/webhooks/1234567890123456789/abcdefghijklmnop-1A-2B3CD4-e5f6g7h8i9j10 \
                      -t '50000ukuji' '900uclan'
+```
+
+## Label and User ID Example
+
+```
+python3 walletmon.py -a kujira1tfknxt857r4lm8eh2py5n3yq00t3mq5eerh6qs \
+                     -d https://discord.com/api/webhooks/1234567890123456789/abcdefghijklmnop-1A-2B3CD4-e5f6g7h8i9j10 \
+                     -t '50000ukuji' \
+                     -u '123456789...'
+                     -l 'Kujira Price Oracle Hotwallet'
 ```
